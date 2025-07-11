@@ -1,0 +1,40 @@
+- name: Docker image deploy to server
+  hosts: target
+  become: yes
+  tasks:
+
+    - name: Docker kur
+      apt:
+        name: docker.io
+        state: present
+        update_cache: yes
+
+    - name: Docker servisini başlat
+      service:
+        name: docker
+        state: started
+        enabled: true
+
+    - name: Docker imajı çek
+      community.docker.docker_image:
+        name: "{{ docker_image }}"
+        source: pull
+
+    - name: Mevcut container'ı kaldır
+      community.docker.docker_container:
+        name: myapp
+        state: absent
+
+    - name: Yeni container'ı başlat
+      community.docker.docker_container:
+        name: myapp
+        image: "{{ docker_image }}"
+        state: started
+        restart_policy: always
+        ports:
+          - "8080:8080"
+
+    - name: Health check
+      uri:
+        url: http://localhost:8080/actuator/health
+        status_code: 200
