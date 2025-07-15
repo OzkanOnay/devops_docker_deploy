@@ -7,7 +7,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
+    environment: DIGITAL_OCEAN
     steps:
       - name: Repo'yu klonla
         uses: actions/checkout@v3
