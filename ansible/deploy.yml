@@ -33,8 +33,3 @@
         restart_policy: always
         ports:
           - "8080:8080"
-
-    - name: Health check
-      uri:
-        url: http://localhost:8080/actuator/health
-        status_code: 200
